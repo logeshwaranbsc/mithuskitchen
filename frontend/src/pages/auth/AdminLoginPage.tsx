@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { ShieldCheck, Lock, Phone, ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
+const mithusLogo = '/mithus_kitchen_logo.svg';
+
 export const AdminLoginPage: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState('+919876543210');
   const [password, setPassword] = useState('admin');
@@ -36,8 +38,8 @@ export const AdminLoginPage: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-[#F7FAF7] px-4 py-12">
       <div className="card-white p-8 sm:p-10 rounded-3xl max-w-md w-full border border-[#E5EAE5] bg-white shadow-soft-xl space-y-6">
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-[#EAF5EC] border border-[#237A45]/30 text-[#237A45] flex items-center justify-center mx-auto shadow-soft">
-            <ShieldCheck className="w-7 h-7" />
+          <div className="w-16 h-16 rounded-2xl bg-white border border-[#E5EAE5] flex items-center justify-center mx-auto shadow-soft p-1.5">
+            <img src={mithusLogo} alt="Mithu's Kitchen" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-2xl font-extrabold text-[#202820]">Admin & Kitchen Login</h1>
           <p className="text-xs text-[#6B756D]">

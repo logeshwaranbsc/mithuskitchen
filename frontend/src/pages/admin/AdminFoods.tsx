@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   Plus, 
@@ -8,19 +8,16 @@ import {
   XCircle, 
   Search, 
   AlertCircle, 
-  Upload, 
-  Image as ImageIcon, 
-  Loader2, 
   Database,
-  ExternalLink
+  Camera
 } from 'lucide-react';
-import { api, uploadFoodImage } from '../../services/api';
+import { api } from '../../services/api';
 import { FoodItem, MealCategory } from '../../types';
 import { formatCurrency } from '../../utils/formatters';
+import { ProductImageUploader } from '../../components/ProductImageUploader';
 
 export const AdminFoods: React.FC = () => {
   const queryClient = useQueryClient();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -39,9 +36,6 @@ export const AdminFoods: React.FC = () => {
   const [calories, setCalories] = useState('350');
   const [servingSize, setServingSize] = useState('1 portion');
   const [formError, setFormError] = useState('');
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState('');
-  const [uploadSuccessInfo, setUploadSuccessInfo] = useState<{ fileName?: string; s3Url?: string } | null>(null);
 
   // Load Categories
   const { data: categories = [] } = useQuery<MealCategory[]>({
@@ -115,8 +109,6 @@ export const AdminFoods: React.FC = () => {
     setCalories('350');
     setServingSize('1 portion');
     setFormError('');
-    setUploadError('');
-    setUploadSuccessInfo(null);
   };
 
   const handleOpenAdd = (defaultDietVeg: boolean = true) => {
@@ -142,35 +134,7 @@ export const AdminFoods: React.FC = () => {
     setCalories(food.calories?.toString() || '350');
     setServingSize(food.serving_size || '1 portion');
     setFormError('');
-    setUploadError('');
-    setUploadSuccessInfo(null);
     setShowModal(true);
-  };
-
-  // Image Upload handler
-  const handleImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    try {
-      setIsUploading(true);
-      setUploadError('');
-      setUploadSuccessInfo(null);
-
-      const result = await uploadFoodImage(file);
-      setImageUrl(result.url);
-      setUploadSuccessInfo({
-        fileName: result.fileName,
-        s3Url: result.s3Url,
-      });
-    } catch (err: any) {
-      setUploadError(err.message || 'Image upload to Supabase storage failed');
-    } finally {
-      setIsUploading(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    }
   };
 
   const filteredFoods = foods.filter((f) => {
@@ -519,90 +483,12 @@ export const AdminFoods: React.FC = () => {
                 />
               </div>
 
-              {/* Food Image Uploader (Supabase Storage: mithu) */}
-              <div className="p-3 bg-[#F7FAF7] border border-[#E5EAE5] rounded-2xl space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="font-semibold text-[#202820] flex items-center gap-1.5">
-                    <ImageIcon className="w-3.5 h-3.5 text-[#237A45]" />
-                    <span>Food Image (Bucket: <strong className="text-[#237A45]">mithu</strong>)</span>
-                  </label>
-                  <span className="text-[10px] text-[#6B756D]">PNG, JPG, WebP</span>
-                </div>
-
-                {/* File Upload Trigger */}
-                <div className="flex items-center gap-2">
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleImageFileChange}
-                    accept="image/png,image/jpeg,image/webp,image/jpg"
-                    className="hidden"
-                    id="food-image-file"
-                  />
-                  <button
-                    type="button"
-                    disabled={isUploading}
-                    onClick={() => fileInputRef.current?.click()}
-                    className="btn-outline text-xs py-2 px-3 flex items-center gap-1.5 bg-white hover:bg-gray-50 flex-1 justify-center"
-                  >
-                    {isUploading ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#237A45]" />
-                        <span>Uploading to Supabase Storage...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="w-3.5 h-3.5 text-[#237A45]" />
-                        <span>Upload Image to Storage</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-
-                {uploadError && (
-                  <p className="text-[11px] text-red-600 font-medium">{uploadError}</p>
-                )}
-
-                {uploadSuccessInfo && (
-                  <div className="text-[11px] text-[#237A45] bg-[#EAF5EC] p-2 rounded-lg space-y-0.5">
-                    <p className="font-semibold">✓ Uploaded to Supabase bucket: mithu</p>
-                    <p className="text-[10px] text-gray-500 truncate">S3: {uploadSuccessInfo.s3Url}</p>
-                  </div>
-                )}
-
-                {/* Direct Image URL input */}
-                <div>
-                  <label className="block text-[11px] text-[#6B756D] mb-1">
-                    Or Image URL (Supabase CDN / Web Link):
-                  </label>
-                  <input
-                    type="url"
-                    required
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                    placeholder="https://..."
-                    className="input-field text-xs bg-white"
-                  />
-                </div>
-
-                {/* Preview Thumbnail */}
-                {imageUrl && (
-                  <div className="flex items-center gap-3 pt-1">
-                    <img
-                      src={imageUrl}
-                      alt="Preview"
-                      className="w-16 h-16 rounded-xl object-cover border border-[#E5EAE5] bg-gray-100 flex-shrink-0"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600&auto=format&fit=crop&q=80';
-                      }}
-                    />
-                    <div className="text-[11px] text-[#6B756D] space-y-0.5 truncate">
-                      <p className="font-semibold text-[#202820]">Image Preview</p>
-                      <p className="text-[10px] truncate max-w-xs">{imageUrl}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
+              {/* Product Image Uploader (Supabase Storage: mithu) */}
+              <ProductImageUploader
+                value={imageUrl}
+                onChange={(newUrl) => setImageUrl(newUrl)}
+                dishName={name || 'Dish'}
+              />
 
               {/* Description */}
               <div>
@@ -656,7 +542,7 @@ export const AdminFoods: React.FC = () => {
             <div className="flex gap-2 pt-3">
               <button
                 onClick={() => saveFoodMutation.mutate()}
-                disabled={saveFoodMutation.isPending || !name || !priceInRupees || isUploading}
+                disabled={saveFoodMutation.isPending || !name || !priceInRupees}
                 className="btn-primary flex-1 text-xs py-2.5"
               >
                 {saveFoodMutation.isPending ? 'Saving...' : 'Save Food Item'}

@@ -26,9 +26,9 @@ router.get('/', (req, res) => foodController.getFoods(req, res));
 router.get('/:id', (req, res) => foodController.getFoodById(req, res));
 router.get('/:id/history', authenticateToken, requireAdmin, (req, res) => foodController.getPriceHistory(req, res));
 
-// Admin image upload to Supabase Storage (mithu bucket)
-router.post('/upload-image', authenticateToken, requireAdmin, upload.single('image'), (req, res) => foodController.uploadImage(req, res));
-router.get('/storage/images', authenticateToken, requireAdmin, (req, res) => foodController.getStorageImages(req, res));
+// Image upload to Supabase Storage (mithu bucket)
+router.post('/upload-image', upload.single('image'), (req, res) => foodController.uploadImage(req, res));
+router.get('/storage/images', (req, res) => foodController.getStorageImages(req, res));
 
 // Admin only food management
 router.post('/admin', authenticateToken, requireAdmin, validateRequest(createFoodItemSchema), (req, res) => foodController.createFood(req, res));

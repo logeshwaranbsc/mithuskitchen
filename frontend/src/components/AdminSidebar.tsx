@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
+const mithusLogo = '/mithus_kitchen_logo.svg';
+
 export const AdminSidebar: React.FC<{ onCloseMobile?: () => void }> = ({ onCloseMobile }) => {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
@@ -47,12 +49,12 @@ export const AdminSidebar: React.FC<{ onCloseMobile?: () => void }> = ({ onClose
         {/* Admin Header */}
         <div className="p-5 border-b border-[#E5EAE5] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-[#EAF5EC] border border-[#237A45]/30 flex items-center justify-center text-[#237A45] shadow-soft">
-              <UtensilsCrossed className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-2xl bg-white border border-[#E5EAE5] flex items-center justify-center overflow-hidden shadow-soft p-1">
+              <img src={mithusLogo} alt="Mithu's Kitchen" className="w-full h-full object-contain" />
             </div>
             <div>
               <span className="font-extrabold text-base tracking-tight text-[#202820]">
-                HOME <span className="text-[#237A45]">KITCHEN</span>
+                MITHU'S <span className="text-[#237A45]">KITCHEN</span>
               </span>
               <p className="text-[11px] font-semibold text-[#237A45] uppercase tracking-wider">
                 Admin Console

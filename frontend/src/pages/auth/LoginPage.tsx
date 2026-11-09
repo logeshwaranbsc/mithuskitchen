@@ -4,6 +4,8 @@ import { Phone, KeyRound, ArrowRight, ShieldCheck, Utensils, AlertCircle } from 
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
 
+const mithusLogo = '/mithus_kitchen_logo.svg';
+
 export const LoginPage: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState('+919876543211');
   const [fullName, setFullName] = useState('Ananya Sharma');
@@ -54,10 +56,10 @@ export const LoginPage: React.FC = () => {
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <div className="card-white p-8 sm:p-10 rounded-3xl max-w-md w-full border border-[#E5EAE5] bg-white shadow-soft-xl space-y-6">
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-[#EAF5EC] border border-[#237A45]/30 text-[#237A45] flex items-center justify-center mx-auto shadow-soft">
-            <Utensils className="w-6 h-6" />
+          <div className="w-16 h-16 rounded-2xl bg-white border border-[#E5EAE5] flex items-center justify-center mx-auto shadow-soft p-1.5">
+            <img src={mithusLogo} alt="Mithu's Kitchen" className="w-full h-full object-contain" />
           </div>
-          <h1 className="text-2xl font-extrabold text-[#202820]">Customer Login</h1>
+          <h1 className="text-2xl font-extrabold text-[#202820]">Mithu's Kitchen Login</h1>
           <p className="text-xs text-[#6B756D]">
             Order fresh meals and subscribe using your mobile number.
           </p>

@@ -2,6 +2,8 @@ import React from 'react';
 import { Utensils, Clock, MessageSquare, MapPin, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+const mithusLogo = '/mithus_kitchen_logo.svg';
+
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-white border-t border-[#E5EAE5] pt-12 pb-8 text-[#202820]">
@@ -9,12 +11,12 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
           {/* Brand Info */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl bg-[#EAF5EC] border border-[#237A45]/20 flex items-center justify-center text-[#237A45]">
-                <Utensils className="w-5 h-5" />
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 rounded-xl bg-white border border-[#E5EAE5] flex items-center justify-center overflow-hidden shadow-xs p-1">
+                <img src={mithusLogo} alt="Mithu's Kitchen" className="w-full h-full object-contain" />
               </div>
               <span className="font-extrabold text-lg tracking-tight">
-                HOME <span className="text-[#237A45]">KITCHEN</span>
+                MITHU'S <span className="text-[#237A45]">KITCHEN</span>
               </span>
             </div>
             <p className="text-sm text-[#6B756D] leading-relaxed">

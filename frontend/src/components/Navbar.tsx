@@ -4,6 +4,8 @@ import { ShoppingBag, Menu, X, User as UserIcon, Calendar, Utensils, Home, Clock
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 
+const mithusLogo = '/mithus_kitchen_logo.svg';
+
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
@@ -33,12 +35,12 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo & Kitchen Tagline */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-[#EAF5EC] border border-[#237A45]/20 flex items-center justify-center text-[#237A45] shadow-soft group-hover:scale-105 transition-all">
-              <Utensils className="w-5 h-5 sm:w-6 sm:h-6" />
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-white border border-[#E5EAE5] flex items-center justify-center overflow-hidden shadow-soft group-hover:scale-105 transition-all p-1">
+              <img src={mithusLogo} alt="Mithu's Kitchen" className="w-full h-full object-contain" />
             </div>
             <div>
               <span className="font-extrabold text-lg sm:text-xl tracking-tight text-[#202820] flex items-center gap-1.5">
-                HOME <span className="text-[#237A45]">KITCHEN</span>
+                MITHU'S <span className="text-[#237A45]">KITCHEN</span>
               </span>
               <p className="text-[11px] text-[#6B756D] font-medium leading-none hidden sm:block">
                 Pure Home-Cooked Goodness
