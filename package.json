@@ -1,0 +1,23 @@
+{
+  "name": "home-kitchen-monorepo",
+  "version": "1.0.0",
+  "description": "HOME KITCHEN – Cloud Kitchen Management System",
+  "private": true,
+  "scripts": {
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:backend": "npm --prefix backend run build",
+    "build:frontend": "npm --prefix frontend run build",
+    "build": "npm run build:backend && npm run build:frontend",
+    "test:backend": "npm --prefix backend test"
+  },
+  "keywords": [
+    "cloud-kitchen",
+    "home-kitchen",
+    "react",
+    "express",
+    "supabase"
+  ],
+  "author": "Home Kitchen Team",
+  "license": "ISC"
+}

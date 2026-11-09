@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#F7FAF7] text-[#202820] font-sans min-h-screen overflow-x-hidden;
+  }
+
+  /* Custom clean scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F7FAF7;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #CBD7CE;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #237A45;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-4 py-2.5 rounded-xl font-semibold bg-[#237A45] text-white hover:bg-[#185C35] active:scale-[0.98] transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#237A45]/30 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-4 py-2.5 rounded-xl font-semibold bg-[#EAF5EC] text-[#237A45] hover:bg-[#d8eedc] active:scale-[0.98] transition-all focus:outline-none focus:ring-2 focus:ring-[#237A45]/20 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center px-4 py-2.5 rounded-xl font-semibold border border-[#E5EAE5] bg-white text-[#202820] hover:bg-[#F7FAF7] hover:border-[#237A45]/40 active:scale-[0.98] transition-all focus:outline-none focus:ring-2 focus:ring-[#237A45]/20 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .card-white {
+    @apply bg-white border border-[#E5EAE5] rounded-2xl shadow-soft;
+  }
+
+  .input-field {
+    @apply w-full px-3.5 py-2.5 bg-white border border-[#E5EAE5] rounded-xl text-[#202820] placeholder-[#6B756D] text-sm focus:outline-none focus:ring-2 focus:ring-[#237A45]/20 focus:border-[#237A45] transition-all;
+  }
+}
