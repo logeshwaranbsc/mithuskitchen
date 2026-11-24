@@ -7,11 +7,20 @@ import { config } from './config/env';
 
 const app = express();
 
+const allowedOrigins = [
+  'https://mithuskitchen-ac58.vercel.app',
+  config.frontendUrl,
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+].filter(Boolean);
+
 // Security Middleware
 app.use(helmet());
 app.use(
   cors({
-    origin: [config.frontendUrl, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   })
 );
