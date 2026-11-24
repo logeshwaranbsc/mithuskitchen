@@ -6,7 +6,7 @@ dotenv.config();
 export const config = {
   port: parseInt(process.env.PORT || '5000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
-  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
+  frontendUrl: process.env.FRONTEND_URL || 'https://mithuskitchen-ac58.vercel.app',
   jwtSecret: process.env.JWT_SECRET || 'home-kitchen-super-secret-key-2026',
   
   // Supabase

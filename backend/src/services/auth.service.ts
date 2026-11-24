@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { config } from '../config/env';
 import { inMemoryStore, Profile } from '../repositories/in-memory-store';
 import { logger } from '../utils/logger';
+import { getSupabaseAdminClient } from '../integrations/supabase/client';
 
 // Store pending OTPs in memory for verification
 const pendingOtps = new Map<string, { otp: string; expiresAt: number }>();
@@ -84,10 +85,35 @@ export class AuthService {
   async adminLogin(identifier: string, password: string): Promise<{ token: string; user: Profile }> {
     // Look up admin profile
     const cleanId = identifier.trim().toLowerCase();
-    const adminProfile = inMemoryStore.profiles.find(
+    let adminProfile = inMemoryStore.profiles.find(
       (p) => (p.role === 'admin' || p.role === 'kitchen_staff') && 
              (p.phone_number === cleanId || p.email?.toLowerCase() === cleanId)
     );
+
+    // If not found in in-memory store and Supabase is configured, check database profiles table
+    if (!adminProfile) {
+      const supabase = getSupabaseAdminClient();
+      if (supabase) {
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('*')
+            .or(`phone_number.eq.${cleanId},email.ilike.${cleanId}`)
+            .eq('is_active', true)
+            .in('role', ['admin', 'kitchen_staff'])
+            .maybeSingle();
+
+          if (data && !error) {
+            adminProfile = data as Profile;
+            if (!inMemoryStore.profiles.some((p) => p.id === adminProfile!.id)) {
+              inMemoryStore.profiles.push(adminProfile);
+            }
+          }
+        } catch (dbErr) {
+          logger.warn('Failed to query Supabase profiles in adminLogin:', dbErr);
+        }
+      }
+    }
 
     if (!adminProfile) {
       // If default admin phone +919876543210 or email admin@homekitchen.com is used

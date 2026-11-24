@@ -3,13 +3,15 @@ import { config } from './config/env';
 import { logger } from './utils/logger';
 import { startNotificationWorker, stopNotificationWorker } from './jobs/notification-worker';
 
-const server = app.listen(config.port, () => {
+const port = config.port;
+
+const server = app.listen(port, '0.0.0.0', () => {
   logger.info(`=======================================================`);
   logger.info(`  HOME KITCHEN - Backend Server Running`);
   logger.info(`  Environment : ${config.nodeEnv}`);
-  logger.info(`  Port        : ${config.port}`);
-  logger.info(`  Base API    : http://localhost:${config.port}/api/v1`);
-  logger.info(`  Health Check: http://localhost:${config.port}/api/v1/health`);
+  logger.info(`  Port        : ${port}`);
+  logger.info(`  Base API    : http://0.0.0.0:${port}`);
+  logger.info(`  Health Check: http://0.0.0.0:${port}/health`);
   logger.info(`=======================================================`);
 
   // Start background outbox notification worker

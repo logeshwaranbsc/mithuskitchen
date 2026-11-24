@@ -16,7 +16,7 @@ export const verifyOtpSchema = z.object({
 
 export const adminLoginSchema = z.object({
   body: z.object({
-    phone_number: z.string().min(10, 'Valid phone number or email is required'),
+    phone_number: z.string().min(3, 'Valid phone number, email or username is required'),
     password: z.string().min(4, 'Admin password is required'),
   }),
 });

@@ -1,6 +1,13 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/v1';
+// In production, fallback to Render production backend URL instead of localhost
+const defaultBaseUrl = import.meta.env.PROD
+  ? 'https://mithuskitchen.onrender.com'
+  : 'http://localhost:5000/api/v1';
+
+const rawBaseUrl = import.meta.env.VITE_API_BASE_URL || defaultBaseUrl;
+// Strip trailing slashes to guarantee clean endpoint concatenation (e.g. /auth/admin-login)
+const API_BASE_URL = rawBaseUrl.replace(/\/+$/, '');
 
 export const api = axios.create({
   baseURL: API_BASE_URL,

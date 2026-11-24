@@ -11,11 +11,48 @@ async function runTests() {
   console.log('=============================================\n');
 
   try {
-    // 1. Health check
-    const healthRes = await fetch(`${baseUrl}/health`).then((r) => r.json());
-    console.log('✔ GET /health:', healthRes.status === 'ok' ? 'PASSED' : 'FAILED');
+    const origin = 'https://mithuskitchen-ac58.vercel.app';
 
-    // 2. Auth: Customer Send OTP & Verify
+    // 0. CORS OPTIONS Preflight Test on /auth/admin-login
+    const preflightRes = await fetch('http://localhost:5099/auth/admin-login', {
+      method: 'OPTIONS',
+      headers: {
+        'Origin': origin,
+        'Access-Control-Request-Method': 'POST',
+        'Access-Control-Request-Headers': 'Content-Type,Authorization',
+      },
+    });
+    const allowOrigin = preflightRes.headers.get('access-control-allow-origin');
+    const allowMethods = preflightRes.headers.get('access-control-allow-methods');
+    const allowHeaders = preflightRes.headers.get('access-control-allow-headers');
+    const allowCredentials = preflightRes.headers.get('access-control-allow-credentials');
+    const corsPassed = allowOrigin === origin &&
+                       allowCredentials === 'true' &&
+                       allowMethods?.includes('POST') &&
+                       allowHeaders?.toLowerCase().includes('content-type');
+    console.log('✔ OPTIONS /auth/admin-login (CORS preflight):', corsPassed ? 'PASSED' : 'FAILED', `(Origin: ${allowOrigin})`);
+
+    // 1. Root & Versioned Health check
+    const rootHealthRes = await fetch('http://localhost:5099/health').then((r) => r.json());
+    console.log('✔ GET /health (Root):', rootHealthRes.status === 'ok' ? 'PASSED' : 'FAILED');
+
+    const healthRes = await fetch(`${baseUrl}/health`).then((r) => r.json());
+    console.log('✔ GET /api/v1/health:', healthRes.status === 'ok' ? 'PASSED' : 'FAILED');
+
+    // 2. Auth: Unversioned POST /auth/admin-login (Matches production frontend call)
+    const directAdminRes = await fetch('http://localhost:5099/auth/admin-login', {
+      method: 'POST',
+      headers: { 
+        'Origin': origin,
+        'Content-Type': 'application/json' 
+      },
+      body: JSON.stringify({ phone_number: '+919876543210', password: 'admin' }),
+    });
+    const directAdminCors = directAdminRes.headers.get('access-control-allow-origin');
+    const directAdminData = await directAdminRes.json();
+    console.log('✔ POST /auth/admin-login (Direct unversioned + CORS header):', directAdminData.success && directAdminCors === origin ? 'PASSED' : 'FAILED');
+
+    // 3. Auth: Customer Send OTP & Verify
     const otpRes = await fetch(`${baseUrl}/auth/send-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
